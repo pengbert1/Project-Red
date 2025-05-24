@@ -8,6 +8,25 @@
 </head>
 <body>
     <h1>Task List</h1>
+    <form id="addTaskForm"></form>
+    <input type="text" id="taskName" placeholder="Task Name">
+    <input type="text" id="taskDescription" placeholder="Task Description">
+    <input type="date" id="taskDueDate" placeholder="Task Due Date">
+    <input type="time" id="taskDueTime" placeholder="Task Due Time">
+    <select id="taskPriority">
+        <label for="taskPriority">Task Priority</label>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+    </select>
+    
+    <button type="submit" onclick="addTask()">Add Task</button>
+    <div id="activeTaskList">
+        <h1>Active Tasks</h1>
+    </div>
+    <div id="completedTaskList">
+        <h1>Completed Tasks</h1>
+    </div>
     <script src="js/storage.js"></script>
     <script src="js/task.js"></script>
     <script src="js/timer.js"></script>
