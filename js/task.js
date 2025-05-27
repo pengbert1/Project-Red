@@ -9,41 +9,68 @@ class Task {
         this.status = "Active";
         console.log(this.name);
         this.id = id;
-        this.activeDiv = null;
-        this.completedDiv = null;
+        this.div = null;
+        this.timer = null;
+
+    
+
+
     }
-    displayActiveTask() {
+    displayTask() {
      console.log("Displaying task");
-      this.activeDiv = document.createElement('div');
+     
+      let cardContainer = document.createElement('div');
+      
+      cardContainer.classList.add('card');
+      cardContainer.style.width = '18rem';
+
+      this.div = document.createElement('div');
+      this.div.classList.add('card-body');
+      if(this.timer == null){
+        this.timer = new Timer(this.div);
+      }
+
+      
       let nameElement = document.createElement('h2');
+      nameElement.classList.add('card-title');
       nameElement.textContent = this.name;
       let descriptionElement = document.createElement('p');
-      descriptionElement.textContent = this.description;
+      descriptionElement.classList.add('card-text');
+      descriptionElement.textContent = "Description: " + this.description;
       let dueDateElement = document.createElement('p');
-      dueDateElement.textContent = this.dueDate;
+      dueDateElement.classList.add('card-text');
+      dueDateElement.textContent = "Due Date: " + this.dueDate;
       let dueTimeElement = document.createElement('p');
-      dueTimeElement.textContent = this.dueTime;
+      dueTimeElement.classList.add('card-text');
+      dueTimeElement.textContent = "Due Time: " + this.dueTime;
       let priorityElement = document.createElement('p');
-      priorityElement.textContent = this.priority;
+      priorityElement.classList.add('card-text');
+      priorityElement.textContent = "Priority: " + this.priority;
       let statusElement = document.createElement('p');
-      statusElement.textContent = this.status;
-
+      statusElement.classList.add('card-text');
+      statusElement.textContent = "Status: " + this.status;
+      
       //Add elements to the div
-      this.activeDiv.appendChild(nameElement);
-      this.activeDiv.appendChild(descriptionElement);
-      this.activeDiv.appendChild(dueDateElement);
-      this.activeDiv.appendChild(dueTimeElement);
-      this.activeDiv.appendChild(priorityElement);
-      this.activeDiv.appendChild(statusElement);
-      document.getElementById("activeTaskList").appendChild(this.activeDiv);
+      cardContainer.appendChild(this.div);
+      this.div.appendChild(nameElement);
+      this.div.appendChild(descriptionElement);
+      this.div.appendChild(dueDateElement);
+      this.div.appendChild(dueTimeElement);
+      this.div.appendChild(priorityElement);
+      this.div.appendChild(statusElement);
+      this.div.appendChild(this.timer.getDisplayElement());
+      
       let completeButton = document.createElement('button');
       completeButton.textContent = "Complete";
       completeButton.addEventListener("click", () => {
         this.status = "Completed";
-        this.completeTask();
         deleteButton.remove();
         completeButton.remove();
-    
+        timerButton.remove();
+        cardContainer.remove();
+        this.completeTask();
+        
+        
       });
       
       let deleteButton = document.createElement('button');
@@ -53,56 +80,60 @@ class Task {
         this.deleteTask();
         completeButton.remove();
         deleteButton.remove();
+        cardContainer.remove();
+        timerButton.remove();
         
         
       });
-    document.getElementById("activeTaskList").appendChild(completeButton);
-    document.getElementById("activeTaskList").appendChild(deleteButton);
-}
-    displayCompletedTask() {
-        console.log("Displaying task");
-      this.completedDiv = document.createElement('div');
-      let nameElement = document.createElement('h2');
-      nameElement.textContent = this.name;
-      let descriptionElement = document.createElement('p');
-      descriptionElement.textContent = this.description;
-      let dueDateElement = document.createElement('p');
-      dueDateElement.textContent = this.dueDate;
-      let dueTimeElement = document.createElement('p');
-      dueTimeElement.textContent = this.dueTime;
-      let priorityElement = document.createElement('p');
-      priorityElement.textContent = this.priority;
-      let statusElement = document.createElement('p');
-      statusElement.textContent = this.status;
 
-      //Add elements to the div
-      this.completedDiv.appendChild(nameElement);
-      this.completedDiv.appendChild(descriptionElement);
-      this.completedDiv.appendChild(dueDateElement);
-      this.completedDiv.appendChild(dueTimeElement);
-      this.completedDiv.appendChild(priorityElement);
-      this.completedDiv.appendChild(statusElement);
-      document.getElementById("completedTaskList").appendChild(this.completedDiv);
-      let deleteButton = document.createElement('button');
-      deleteButton.textContent = "Delete";
-      deleteButton.addEventListener("click", () => {
-        this.status = "Deleted";
-        this.deleteTask();
-        deleteButton.remove();
-        
-        
+     
+
+      let timerButton = document.createElement('button');
+      timerButton.textContent = "Start Timer";
+      timerButton.addEventListener("click", () => {
+        if(timerButton.textContent === "Start Timer"){  
+          this.timer.start();
+          timerButton.textContent = "Stop Timer";
+        }
+        else{
+          this.timer.stop();
+          timerButton.textContent = "Start Timer";
+        }
+        this.timer.display();
+    
       });
-      document.getElementById("completedTaskList").appendChild(deleteButton);
-    }  
+      
+
+      if(this.status === "Active"){
+        document.getElementById("activeTaskList").appendChild(cardContainer);
+        document.getElementById("activeTaskList").appendChild(completeButton);
+        document.getElementById("activeTaskList").appendChild(deleteButton);
+        document.getElementById("activeTaskList").appendChild(timerButton);
+        this.timer.display();
+        this.timer.continousDisplay();
+      }
+      else{
+        document.getElementById("completedTaskList").appendChild(cardContainer);
+        document.getElementById("completedTaskList").appendChild(deleteButton);
+        this.timer.display();
+        this.timer.continousDisplay();
+        
+      }
+      
+   
+}
+    
 
     completeTask() {
+        this.timer.stop();
         this.status = "Completed";
-        this.activeDiv.remove();
-        this.displayCompletedTask();
+        this.div.remove();
+        this.displayTask();
+        
     }
     deleteTask() {
         this.status = "Deleted";
-        this.activeDiv.remove();
+        this.div.remove();
         if (this.completedDiv) {
             this.completedDiv.remove();
         }
