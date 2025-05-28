@@ -1,6 +1,7 @@
 class Task {
-    constructor(id) {
-        console.log("constructor");
+    constructor(id, taskData, status = "new") {
+        
+        if(status === "new"){
         this.name = document.getElementById("taskName").value;
         this.description = document.getElementById("taskDescription").value;
         this.dueDate = document.getElementById("taskDueDate").value;
@@ -11,6 +12,20 @@ class Task {
         this.id = id;
         this.div = null;
         this.timer = null;
+        this.timeElaspedMilliseconds = 0;
+        }
+        else{
+            this.name = taskData.name;
+            this.description = taskData.description;
+            this.dueDate = taskData.dueDate;
+            this.dueTime = taskData.dueTime;
+            this.priority = taskData.priority;
+            this.status = taskData.status;
+            this.id = taskData.id;
+            this.div = null;
+            this.timer = null;
+            this.timeElaspedMilliseconds = taskData.timeElaspedMilliseconds;
+        }
 
     
 
@@ -27,7 +42,7 @@ class Task {
       this.div = document.createElement('div');
       this.div.classList.add('card-body');
       if(this.timer == null){
-        this.timer = new Timer(this.div);
+        this.timer = new Timer(this.div, this.timeElaspedMilliseconds);
       }
 
       
@@ -141,3 +156,5 @@ class Task {
 
     }
 }
+
+

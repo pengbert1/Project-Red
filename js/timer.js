@@ -1,11 +1,8 @@
  class Timer {
-    constructor(div) {
+    constructor(div, timeElaspedMilliseconds) {
         this.startTime = null;
         this.endTime = null;
-        this.durationMilliseconds = 0;
-        this.totalHours = 0;
-        this.totalMinutes = 0;
-        this.totalSeconds = 0;
+        this.totalDurationMilliseconds = timeElaspedMilliseconds;
         this.div = div;
         this.timerDisplay = document.createElement('p');
         this.active = false;
@@ -19,15 +16,27 @@
         this.endTime = new Date();
         this.active = false;
         this.durationMilliseconds = this.endTime - this.startTime;
-        this.totalSeconds =  this.totalSeconds + Math.floor(this.durationMilliseconds / 1000);
-        this.totalMinutes = this.totalMinutes + Math.floor(this.totalSeconds / 60);
-        this.totalHours = this.totalHours + Math.floor(this.totalMinutes / 60);
+        this.totalDurationMilliseconds = this.totalDurationMilliseconds + this.durationMilliseconds;
+
     }
     display() {
         
-        this.timerDisplay.textContent = this.totalHours + ":" + this.totalMinutes + ":" + this.totalSeconds;
+        let tempSeconds = Math.floor((this.totalDurationMilliseconds) / 1000) % 60;
+        let tempMinutes = Math.floor((this.totalDurationMilliseconds) / 60000) % 60;
+        let tempHours = Math.floor((this.totalDurationMilliseconds) / 3600000);
+
+        this.timerDisplay.textContent = "";
+        if(tempHours > 0){
+        this.timerDisplay.textContent = this.timerDisplay.textContent + " Hours: " + tempHours
+        }
+        if(tempMinutes > 0){
+            this.timerDisplay.textContent = this.timerDisplay.textContent + " Minutes: " + tempMinutes
+        }
+        if(tempSeconds > 0){
+            this.timerDisplay.textContent = this.timerDisplay.textContent + " Seconds: " + tempSeconds
+        }
+
         this.div.appendChild(this.timerDisplay);
-        
     }
     reset() {
         this.startTime = null;
@@ -48,16 +57,31 @@
             let currentTime = new Date();
             if(this.startTime != null && this.active){
             let durationMilliseconds = currentTime - this.startTime;
-            let tempSeconds =  this.totalSeconds + Math.floor(durationMilliseconds / 1000);
-            let tempMinutes = this.totalMinutes + Math.floor(tempSeconds / 60);
-            let tempHours = this.totalHours + Math.floor(tempMinutes / 60);
-            
-            this.timerDisplay.textContent = tempHours + ":" + tempMinutes + ":" + tempSeconds;
+            let tempSeconds = Math.floor((durationMilliseconds + this.totalDurationMilliseconds) / 1000) % 60;
+            let tempMinutes = Math.floor((durationMilliseconds + this.totalDurationMilliseconds) / 60000) % 60;
+            let tempHours = Math.floor((durationMilliseconds + this.totalDurationMilliseconds) / 3600000);
+            //clean formating for the display
+            this.timerDisplay.textContent = "";
+            if(tempHours > 0){
+                this.timerDisplay.textContent = this.timerDisplay.textContent + " Hours: " + tempHours
+                }
+                if(tempMinutes > 0){
+                    this.timerDisplay.textContent = this.timerDisplay.textContent + " Minutes: " + tempMinutes
+                }
+                if(tempSeconds > 0){
+                    this.timerDisplay.textContent = this.timerDisplay.textContent + " Seconds: " + tempSeconds
+                }
+        
+                this.div.appendChild(this.timerDisplay);
             }
         }, 1000);
 
 
 
+    }
+
+    getTimeElaspedMilliseconds() {
+        return this.totalDurationMilliseconds;
     }
 
 }
