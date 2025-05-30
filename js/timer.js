@@ -1,11 +1,11 @@
  class Timer {
-    constructor(div, timeElaspedMilliseconds) {
+    constructor(taskId, timeElaspedMilliseconds = 0) {
         this.startTime = null;
         this.endTime = null;
         this.totalDurationMilliseconds = timeElaspedMilliseconds;
-        this.div = div;
-        this.timerDisplay = document.createElement('p');
+        this.timerDisplay = null;
         this.active = false;
+        this.taskId = taskId;
 
     }
     start() {
@@ -19,12 +19,17 @@
         this.totalDurationMilliseconds = this.totalDurationMilliseconds + this.durationMilliseconds;
 
     }
+
+
+    
+
     display() {
-        
         let tempSeconds = Math.floor((this.totalDurationMilliseconds) / 1000) % 60;
         let tempMinutes = Math.floor((this.totalDurationMilliseconds) / 60000) % 60;
         let tempHours = Math.floor((this.totalDurationMilliseconds) / 3600000);
-
+        this.taskCard = document.getElementById(this.taskId);
+        console.log("this.taskCard: " + this.taskCard.id);
+        this.timerDisplay = this.taskCard.shadowRoot.querySelector('#timeElasped');
         this.timerDisplay.textContent = "";
         if(tempHours > 0){
         this.timerDisplay.textContent = this.timerDisplay.textContent + " Hours: " + tempHours
@@ -35,8 +40,6 @@
         if(tempSeconds > 0){
             this.timerDisplay.textContent = this.timerDisplay.textContent + " Seconds: " + tempSeconds
         }
-
-        this.div.appendChild(this.timerDisplay);
     }
     reset() {
         this.startTime = null;
@@ -61,6 +64,10 @@
             let tempMinutes = Math.floor((durationMilliseconds + this.totalDurationMilliseconds) / 60000) % 60;
             let tempHours = Math.floor((durationMilliseconds + this.totalDurationMilliseconds) / 3600000);
             //clean formating for the display
+            console.log("this.taskId: " + this.taskId);
+            this.taskCard = document.getElementById(this.taskId);
+            console.log("this.taskCard: " + this.taskCard.id);
+            this.timerDisplay = this.taskCard.shadowRoot.querySelector('#timeElasped');
             this.timerDisplay.textContent = "";
             if(tempHours > 0){
                 this.timerDisplay.textContent = this.timerDisplay.textContent + " Hours: " + tempHours
@@ -72,7 +79,6 @@
                     this.timerDisplay.textContent = this.timerDisplay.textContent + " Seconds: " + tempSeconds
                 }
         
-                this.div.appendChild(this.timerDisplay);
             }
         }, 1000);
 

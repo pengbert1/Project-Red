@@ -7,11 +7,13 @@ class Task {
         this.dueDate = document.getElementById("taskDueDate").value;
         this.dueTime = document.getElementById("taskDueTime").value;
         this.priority = document.getElementById("taskPriority").value;
+        this.goalDuration = document.getElementById("taskGoalDuration").value;
+        this.goalDurationMilliseconds = document.getElementById("taskGoalDuration").value * 60 * 60 * 1000;
         this.status = "Active";
         console.log(this.name);
         this.id = id;
         this.div = null;
-        this.timer = null;
+        this.timer = new Timer(this.id,this.timeElaspedMilliseconds);
         this.timeElaspedMilliseconds = 0;
         }
         else{
@@ -23,138 +25,88 @@ class Task {
             this.status = taskData.status;
             this.id = taskData.id;
             this.div = null;
-            this.timer = null;
             this.timeElaspedMilliseconds = taskData.timeElaspedMilliseconds;
+            this.timer = new Timer(this.id,this.timeElaspedMilliseconds);
+            this.goalDuration = taskData.goalDuration;
+            this.goalDurationMilliseconds = taskData.goalDurationMilliseconds;
         }
 
     
 
 
     }
-    displayTask() {
-     console.log("Displaying task");
-     
-      let cardContainer = document.createElement('div');
-      
-      cardContainer.classList.add('card');
-      cardContainer.style.width = '18rem';
 
-      this.div = document.createElement('div');
-      this.div.classList.add('card-body');
-      if(this.timer == null){
-        this.timer = new Timer(this.div, this.timeElaspedMilliseconds);
+    DisplayTask(){
+      let taskCard = document.createElement('task-card');
+      taskCard.setAttribute('id', this.id);
+      taskCard.setAttribute('title', this.name);
+      taskCard.setAttribute('description', "Description: " + this.description);
+      taskCard.setAttribute('dueDate', "Due Date: " + this.dueDate);
+      taskCard.setAttribute('dueTime', "Due Time: " + this.dueTime);
+      taskCard.setAttribute('priority', "Priority: " + this.priority);
+      taskCard.setAttribute('status', "Status: " + this.status);
+      taskCard.setAttribute('goalDuration', "Goal Duration (hrs): " + this.goalDuration );
+      
+      if(this.status === "Active"){
+        document.getElementById("activeTaskList").appendChild(taskCard);
       }
-
+      else{
+        document.getElementById("completedTaskList").appendChild(taskCard);
+      }
       
-      let nameElement = document.createElement('h2');
-      nameElement.classList.add('card-title');
-      nameElement.textContent = this.name;
-      let descriptionElement = document.createElement('p');
-      descriptionElement.classList.add('card-text');
-      descriptionElement.textContent = "Description: " + this.description;
-      let dueDateElement = document.createElement('p');
-      dueDateElement.classList.add('card-text');
-      dueDateElement.textContent = "Due Date: " + this.dueDate;
-      let dueTimeElement = document.createElement('p');
-      dueTimeElement.classList.add('card-text');
-      dueTimeElement.textContent = "Due Time: " + this.dueTime;
-      let priorityElement = document.createElement('p');
-      priorityElement.classList.add('card-text');
-      priorityElement.textContent = "Priority: " + this.priority;
-      let statusElement = document.createElement('p');
-      statusElement.classList.add('card-text');
-      statusElement.textContent = "Status: " + this.status;
-      
-      //Add elements to the div
-      cardContainer.appendChild(this.div);
-      this.div.appendChild(nameElement);
-      this.div.appendChild(descriptionElement);
-      this.div.appendChild(dueDateElement);
-      this.div.appendChild(dueTimeElement);
-      this.div.appendChild(priorityElement);
-      this.div.appendChild(statusElement);
-      this.div.appendChild(this.timer.getDisplayElement());
-      
-      let completeButton = document.createElement('button');
-      completeButton.textContent = "Complete";
-      completeButton.addEventListener("click", () => {
+      let completeButton = taskCard.shadowRoot.querySelector('#completeButton');
+      if(this.status === "Active"){
+        completeButton.style.display = "inline";
+      }
+      else{
+        completeButton.textContent = "Set as Active";
+      }
+        completeButton.addEventListener('click', () => {
+          console.log("Complete button clicked");
+        if(this.status === "Active"){
         this.status = "Completed";
-        deleteButton.remove();
-        completeButton.remove();
-        timerButton.remove();
-        cardContainer.remove();
-        this.completeTask();
-        
-        
-      });
-      
-      let deleteButton = document.createElement('button');
-      deleteButton.textContent = "Delete";
-      deleteButton.addEventListener("click", () => {
-        this.status = "Deleted";
-        this.deleteTask();
-        completeButton.remove();
-        deleteButton.remove();
-        cardContainer.remove();
-        timerButton.remove();
-        
-        
-      });
-
-     
-
-      let timerButton = document.createElement('button');
-      timerButton.textContent = "Start Timer";
-      timerButton.addEventListener("click", () => {
-        if(timerButton.textContent === "Start Timer"){  
-          this.timer.start();
-          timerButton.textContent = "Stop Timer";
+        this.DisplayTask();
+        taskCard.remove();
+        return;
         }
         else{
-          this.timer.stop();
-          timerButton.textContent = "Start Timer";
+          this.status = "Active";
+          this.DisplayTask();
+          taskCard.remove();
+          return;
         }
-        this.timer.display();
-    
       });
-      
 
-      if(this.status === "Active"){
-        document.getElementById("activeTaskList").appendChild(cardContainer);
-        document.getElementById("activeTaskList").appendChild(completeButton);
-        document.getElementById("activeTaskList").appendChild(deleteButton);
-        document.getElementById("activeTaskList").appendChild(timerButton);
-        this.timer.display();
+      let deleteButton = taskCard.shadowRoot.querySelector('#deleteButton');
+      deleteButton.addEventListener('click', () => {
+        console.log("Delete button clicked");
+        taskCard.remove();
+        this.status = "deleted";
+        return;
+      });
+
+      let timerButton = taskCard.shadowRoot.querySelector('#timerButton');
+      timerButton.addEventListener('click', () => {
+        if(!this.timer.active){
+        console.log("Timer button clicked");
+        this.timer.start();
         this.timer.continousDisplay();
       }
       else{
-        document.getElementById("completedTaskList").appendChild(cardContainer);
-        document.getElementById("completedTaskList").appendChild(deleteButton);
+        this.timer.stop();
         this.timer.display();
-        this.timer.continousDisplay();
-        
       }
-      
-   
-}
+      });
+
+
+      taskCard.displayTaskCard();
+      this.timer.display();
+    }
+
     
 
-    completeTask() {
-        this.timer.stop();
-        this.status = "Completed";
-        this.div.remove();
-        this.displayTask();
-        
-    }
-    deleteTask() {
-        this.status = "Deleted";
-        this.div.remove();
-        if (this.completedDiv) {
-            this.completedDiv.remove();
-        }
 
-
-    }
+    
 }
 
 

@@ -6,7 +6,7 @@ console.log(taskList)
 if(taskList != null){
     for(let i = 0; i < taskList.length; i++){
         let taskData = taskList[i];
-        let taskObj = new Task(taskId, taskData, "old");
+        let taskObj = new Task(String(taskId), taskData, "old");
         tasks.push(taskObj);
         taskId++;
     }
@@ -24,7 +24,7 @@ function addTask() {
     let task = new Task(taskId);
     tasks.push(task);
     console.log("Task %s added", task.name);
-    task.displayTask();
+    task.DisplayTask();
     taskId++;
    
     
@@ -71,7 +71,7 @@ function storeTasks() {
     }
     for (let i = 0; i < tasks.length; i++) {
         let task = tasks[i];
-        task.displayTask();
+        task.DisplayTask();
         console.log("displaying:", task.name);
     }
   }
