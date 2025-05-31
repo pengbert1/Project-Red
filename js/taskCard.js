@@ -10,13 +10,23 @@ template.innerHTML = `
     }
 
     .card-title{
-        color:rgb(28, 227, 61);
+        color:rgb(227, 28, 28);
+    }
+    
+    .top-right-button{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
     
 
 </style>
 <div class="card" style="width: 18rem;">
     <div class="card-body">
+        <button id="editButton" class="btn btn-outline-primary top-right-button">Edit</button>
         <h3 class="card-title" id="title">Task Title</h3>
+        
         <p class="card-text" id="description">Task Description</p>
         <p class="card-text" id="dueDate">Task Due Date</p>
         <p class="card-text" id="dueTime">Task Due Time</p>
@@ -25,19 +35,21 @@ template.innerHTML = `
         <p class="card-text" id="timeElasped"></p>
 
 
-        <button id="completeButton">
-            <img src="assets/images/blue-check.jpg" style="width: 50px; height: 50px; border-radius: 2px;">
-        </button>
-        
-        
-        
-        <button id="deleteButton">
-            <img src="assets/images/red-x.png" style="width: 50px; height: 50px; ">
-        </button>
-        
-        <button id = "timerButton">
-            <img src="assets/images/timer.png" style="width: 50px; height: 50px; ">
-        </button>
+        <div class="btn-group" role="group">
+            <button id="completeButton" class="btn btn-outline-success mx-1">
+                Complete
+            </button>
+            
+            
+            
+            <button id="deleteButton" class="btn btn-outline-danger mx-1">
+                Delete
+            </button>
+            
+            <button id = "timerButton" class="btn btn-outline-primary mx-1">
+                Start Timer
+            </button>
+        </div>
     </div>
 </div>
 `;

@@ -1,4 +1,4 @@
- class Timer {
+class Timer {
     constructor(taskId, timeElaspedMilliseconds = 0) {
         this.startTime = null;
         this.endTime = null;
@@ -21,9 +21,16 @@
     }
 
 
-    
+
 
     display() {
+
+        console.log("displaying timer");
+        if(this.totalDurationMilliseconds == 0){
+            console.log("totalDurationMilliseconds is 0");
+            return;
+        }
+        console.log("totalDurationMilliseconds is" + this.totalDurationMilliseconds);
         let tempSeconds = Math.floor((this.totalDurationMilliseconds) / 1000) % 60;
         let tempMinutes = Math.floor((this.totalDurationMilliseconds) / 60000) % 60;
         let tempHours = Math.floor((this.totalDurationMilliseconds) / 3600000);
@@ -31,16 +38,17 @@
         console.log("this.taskCard: " + this.taskCard.id);
         this.timerDisplay = this.taskCard.shadowRoot.querySelector('#timeElasped');
         this.timerDisplay.textContent = "";
-        if(tempHours > 0){
-        this.timerDisplay.textContent = this.timerDisplay.textContent + " Hours: " + tempHours
+        if (tempHours > 0) {
+            this.timerDisplay.textContent = this.timerDisplay.textContent + " " + tempHours + "h"
         }
-        if(tempMinutes > 0){
-            this.timerDisplay.textContent = this.timerDisplay.textContent + " Minutes: " + tempMinutes
+        if (tempMinutes > 0) {
+            this.timerDisplay.textContent = this.timerDisplay.textContent + " " + tempMinutes + "m"
         }
-        if(tempSeconds > 0){
-            this.timerDisplay.textContent = this.timerDisplay.textContent + " Seconds: " + tempSeconds
+        if (tempSeconds > 0) {
+            this.timerDisplay.textContent = this.timerDisplay.textContent + " " + tempSeconds + "s"
         }
     }
+
     reset() {
         this.startTime = null;
         this.endTime = null;
@@ -57,29 +65,29 @@
 
     //constant display every 1s while active 
     continousDisplay() {
-            let intervalID = setInterval(() => {
+        let intervalID = setInterval(() => {
             let currentTime = new Date();
-            if(this.startTime != null && this.active){
-            let durationMilliseconds = currentTime - this.startTime;
-            let tempSeconds = Math.floor((durationMilliseconds + this.totalDurationMilliseconds) / 1000) % 60;
-            let tempMinutes = Math.floor((durationMilliseconds + this.totalDurationMilliseconds) / 60000) % 60;
-            let tempHours = Math.floor((durationMilliseconds + this.totalDurationMilliseconds) / 3600000);
-            //clean formating for the display
-            console.log("this.taskId: " + this.taskId);
-            this.taskCard = document.getElementById(this.taskId);
-            console.log("this.taskCard: " + this.taskCard.id);
-            this.timerDisplay = this.taskCard.shadowRoot.querySelector('#timeElasped');
-            this.timerDisplay.textContent = '';
-            if(tempHours > 0){
-                this.timerDisplay.textContent = this.timerDisplay.textContent + " Hours: " + tempHours
+            if (this.startTime != null && this.active) {
+                let durationMilliseconds = currentTime - this.startTime;
+                let tempSeconds = Math.floor((durationMilliseconds + this.totalDurationMilliseconds) / 1000) % 60;
+                let tempMinutes = Math.floor((durationMilliseconds + this.totalDurationMilliseconds) / 60000) % 60;
+                let tempHours = Math.floor((durationMilliseconds + this.totalDurationMilliseconds) / 3600000);
+                //clean formating for the display
+                console.log("this.taskId: " + this.taskId);
+                this.taskCard = document.getElementById(this.taskId);
+                console.log("this.taskCard: " + this.taskCard.id);
+                this.timerDisplay = this.taskCard.shadowRoot.querySelector('#timeElasped');
+                this.timerDisplay.textContent = '';
+                if (tempHours > 0) {
+                    this.timerDisplay.textContent = this.timerDisplay.textContent + " " + tempHours + "h"
                 }
-                if(tempMinutes > 0){
-                    this.timerDisplay.textContent = this.timerDisplay.textContent + " Minutes: " + tempMinutes
+                if (tempMinutes > 0) {
+                    this.timerDisplay.textContent = this.timerDisplay.textContent + " " + tempMinutes + "m"
                 }
-                if(tempSeconds > 0){
-                    this.timerDisplay.textContent = this.timerDisplay.textContent + " Seconds: " + tempSeconds
+                if (tempSeconds > 0) {
+                    this.timerDisplay.textContent = this.timerDisplay.textContent + " " + tempSeconds + "s"
                 }
-        
+
             }
         }, 1000);
 
