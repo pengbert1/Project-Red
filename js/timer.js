@@ -48,6 +48,7 @@
         this.totalHours = 0;
         this.totalMinutes = 0;
         this.totalSeconds = 0;
+        this.totalDurationMilliseconds = 0;
     }
 
     getDisplayElement() {
@@ -68,7 +69,7 @@
             this.taskCard = document.getElementById(this.taskId);
             console.log("this.taskCard: " + this.taskCard.id);
             this.timerDisplay = this.taskCard.shadowRoot.querySelector('#timeElasped');
-            this.timerDisplay.textContent = "";
+            this.timerDisplay.textContent = '';
             if(tempHours > 0){
                 this.timerDisplay.textContent = this.timerDisplay.textContent + " Hours: " + tempHours
                 }

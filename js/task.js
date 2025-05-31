@@ -39,14 +39,35 @@ class Task {
     DisplayTask(){
       let taskCard = document.createElement('task-card');
       taskCard.setAttribute('id', this.id);
-      taskCard.setAttribute('title', this.name);
-      taskCard.setAttribute('description', "Description: " + this.description);
-      taskCard.setAttribute('dueDate', "Due Date: " + this.dueDate);
-      taskCard.setAttribute('dueTime', "Due Time: " + this.dueTime);
-      taskCard.setAttribute('priority', "Priority: " + this.priority);
-      taskCard.setAttribute('status', "Status: " + this.status);
-      taskCard.setAttribute('goalDuration', "Goal Duration (hrs): " + this.goalDuration );
-      
+
+      if(this.name != null && this.name != ''){
+        taskCard.setAttribute('title', this.name);
+      }else{
+        taskCard.setAttribute('title', "Unnamed Task");
+      }
+
+      if(this.description != '' && this.description != null){
+        taskCard.setAttribute('description', "Description: " + this.description);
+      }
+
+      if(this.dueDate != null && this.dueDate != ''){
+        taskCard.setAttribute('dueDate', "Due Date: " + this.dueDate);
+      }
+
+      if(this.dueTime != null && this.dueTime != ''){
+        taskCard.setAttribute('duetime', "Due Time: " + this.dueTime);
+      }
+
+      if(this.priority != null && this.priority != '' && this.priority != 'None'){
+        taskCard.setAttribute('priority', "Priority: " + this.priority);
+      }
+
+
+      if(this.goalDuration != null && this.goalDuration != ''){
+        taskCard.setAttribute('goalDuration', "Goal Duration: " + this.goalDuration + " hours");
+        console.log("goalDuration: " + this.goalDuration);
+      }
+
       if(this.status === "Active"){
         document.getElementById("activeTaskList").appendChild(taskCard);
       }
@@ -85,22 +106,30 @@ class Task {
         return;
       });
 
+
       let timerButton = taskCard.shadowRoot.querySelector('#timerButton');
-      timerButton.addEventListener('click', () => {
-        if(!this.timer.active){
-        console.log("Timer button clicked");
-        this.timer.start();
-        this.timer.continousDisplay();
+      if(this.status === "Completed"){
+        timerButton.style.display = "none";
       }
       else{
-        this.timer.stop();
-        this.timer.display();
-      }
+        timerButton.addEventListener('click', () => {
+        if(!this.timer.active){
+          console.log("Timer button clicked");
+          this.timer.start();
+          this.timer.continousDisplay();
+        }
+      else{
+          this.timer.stop();
+          this.timer.display();
+          }  
+        
       });
-
-
+      }
+    
+      this.timer.continousDisplay();
       taskCard.displayTaskCard();
-      this.timer.display();
+      
+      
     }
 
     
